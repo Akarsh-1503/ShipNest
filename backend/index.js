@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.route.js';
 import officeRoutes from './routes/office.route.js';
 import parcelRoutes from './routes/parcel.route.js';
 import locationRoutes from './routes/location.route.js';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -15,7 +16,9 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
   console.log(err);
 });
 
-const __dirname = path.resolve();
+const __filename = fileURLToPath(import.meta.url)
+// const __dirname = path.resolve();
+const __dirname = path.dirname(__filename)
 const app = express();
 
 
@@ -27,9 +30,9 @@ app.use("/api/office",officeRoutes);
 app.use("/api/parcel",parcelRoutes);
 app.use("/api/location",locationRoutes);
 
-
+app.use(express.static(path.join(__dirname,  'frontend/dist')))
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+  res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
 });
 
 
